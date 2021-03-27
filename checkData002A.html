@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Kuzushi-ji Checker
+</title>
+</head>
+<body>
+
+<div id=dArea></div>
+
+
+<!-- #####↓この行を修正する##### -->
+<script type="text/javascript" src="master002A.js"></script>
+
+<script type="text/javascript">
+<!--
+
+// #####↓この2行も修正する#####
+//const header = "./pythonOutput/";
+const header = "./imagePool/";
+const suffix = ".jpg";
+
+iArea = document.getElementById("dArea");
+while(mastData.length > 0) {
+  temp = mastData.shift();
+  iArea.appendChild(document.createTextNode(temp[0].charAt(0)+"："));
+  while(temp.length > 0) {
+    uri = temp.shift();
+    anImg = document.createElement("img");
+    anImg.src = header + uri + suffix;
+    iArea.appendChild(anImg);
+    iArea.appendChild(document.createTextNode(" "));
+  }
+  iArea.appendChild(document.createElement("br"));
+}
+
+
+// -->
+</script>
+
+
+</body>
+</html>
