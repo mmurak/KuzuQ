@@ -118,9 +118,9 @@ function clicked() {
     inField.value = input;    // in case of multiple character input
     if (input == answer) {
       numOfR += 1;
-      descField.firstChild.nodeValue = answer + "で正解！（" + title + "）" + getScore2();
+      descField.firstChild.nodeValue = answer + "で正解！（出典：" + title + "）" + getScore2();
     } else {
-      descField.firstChild.nodeValue = "残念！答えは" + answer + "です（" + title + "）" + getScore2();
+      descField.firstChild.nodeValue = "残念！答えは" + answer + "です（出典：" + title + "）" + getScore2();
       missedQuestion.push(qNo);
     }
     currentMode = 2;
