@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kuzushi-ji Quiz - Neo</title>
+<link rel="stylesheet" href="praise.css">
+<script src="praise.js"></script>
+
+<script type="text/javascript" src="NewMasterIdx.js"></script>
+
+
+</head>
+<body onLoad="initialize();" style="background-color: #F0F8FF">
+<div class="cherry-blossom-container">
+
+<select name="namae" id="selectorWid" onchange="selected(this.value);">
+<option disabled selected>テスト内容を選択</option>
+</select>
+<br/>
+<input type="button" id="multiButton" value="スタート" onclick="clicked();">
+<input type="text" id="ansField" size="5" style="font-size: 26px;">
+<div id="expField">　</div>
+<hr>
+<img id="preloadArea" src="" width="1px" height="1px"></img>
+<img id="imageArea" width="100" src=""></img>
+<div id="reviewArea"></div>
+
+<br/>
+<span style="font-size: 6px">データは『日本古典籍くずし字データセット』（国文研ほか所蔵／CODH加工） doi:10.20676/00000340 のものを使用しています。<br/>
+提供：<a href="http://codh.rois.ac.jp/">人文学オープンデータ共同利用センター</a></span>
+
+</div>
+
+<script type="text/javascript">
+<!--
+// Global section
+const header = "./imagePool/";
+const suffix = ".jpg";
+const pattern = /\/([^ (]+)/;
+var currentMode = 0;    // 0=start, 1=check, 2=next, 3=review
+var numOfR = 0;
+var qNo = 0;
+var numOfQ;
+var imageList = [];
+var dataReady = false;
+var missedQuestion = [];
+
+// 'Shuffler' from https://bost.ocks.org/mike/shuffle/
+function shuffle(array) {
+  var m = array.length, t, i;
+
+  // While there remain elements to shuffle…
+  while (m) {
+    // Pick a remaining element…
+    i = Math.floor(Math.random() * m--);
+    // And swap it with the current element.
+    t = array[m];
+    array[m] = array[i];
+    array[i] = t;
+  }
+  return array;
+}
+
+
+
+// Image retrieving methods
+nextImagePtr = 0;     // as static variable
+function nextList() {
+  if (nextImagePtr == imageList.length) {
+    return "";
+  }
+  return header + imageList[nextImagePtr++] + suffix;
+}
+
+function nextImage() {
+  var panel = document.getElementById("imageArea");
+  var cache = document.getElementById("preloadArea");
+  if (nextImagePtr == 0) { // 初回？
+    panel.src = nextList();
+    cache.src = nextList();
+  } else {
+    panel.src=cache.src;
+    var temp = nextList();
+    if (temp != "") {       // No assignment when the list is empty.
+      cache.src = temp;
+    }
+  }
+}
+
+function getNthImageName(idx) {
+  return imageList[idx];
+}
+
+function _keepingTidy() {
+  var button = document.getElementById("multiButton");
+  var inField = document.getElementById("ansField");
+  var descField = document.getElementById("expField");
+  qNo += 1;
+  currentMode = 1;    // Set mode to 'entry.'
+  button.value = "チェック";
+  inField.value = "";
+  inField.focus();
+  descField.firstChild.nodeValue = getScore();
+  nextImage();
+}
+
+
+function clicked() {
+  if (!dataReady)  return;
+  var button = document.getElementById("multiButton");
+  var inField = document.getElementById("ansField");
+  var descField = document.getElementById("expField");
+  if (currentMode == 0) {   // start/next
+    _keepingTidy();
+  } else if (currentMode == 1) {  // check
+    var sourceName = imageList[qNo - 1];
+    var answer = sourceName.charAt(0);
+    var title = sourceName.match(pattern)[1];
+    var input = inField.value;
+    input = input.trim().charAt(0);
+    inField.value = input;    // in case of multiple character input
+    if (input == answer) {
+      numOfR += 1;
+      descField.firstChild.nodeValue = getScore() + " " +answer + "で正解！（" + title + "）";
+    } else {
+      descField.firstChild.nodeValue = getScore() + " 残念！答えは" + answer + "です（" + title + "）";
+      missedQuestion.push(qNo);
+    }
+    currentMode = 2;
+    button.value = "次へ";
+  } else if (currentMode == 2) {  // next
+      if (numOfQ < qNo) {
+          if (numOfR == (numOfQ + 1)) {
+            petalStart();
+            descField.firstChild.nodeValue = getScore() + " 全問正解！！！　お疲れさまでした！";
+            currentMode = 4;
+            button.value = "もう一度やる";
+          } else {
+            descField.firstChild.nodeValue = getScore() + " お疲れさまでした！";
+            currentMode = 3;
+            button.value = "間違った字を確認する";
+          }
+      } else {
+        _keepingTidy();
+      }
+  } else if (currentMode == 3) {  // review
+    var reviewDiv = document.getElementById("reviewArea");
+    while(missedQuestion.length > 0) {
+        var idx = missedQuestion.shift() - 1;
+        var imagePath = getNthImageName(idx);
+        var ch = imagePath.charAt(0);
+        reviewDiv.appendChild(document.createTextNode(ch + ": "));
+        var anImage = document.createElement("img");
+        anImage.src = header + imagePath + suffix;
+        reviewDiv.appendChild(anImage);
+//        reviewDiv.appendChild(document.createElement("br"));
+    }
+    currentMode = 4;
+    button.value = "もう一度やる";
+  } else if (currentMode == 4) {  // retry
+    window.location.reload();
+  }
+}
+
+
+function checkEnter(e) {
+  if (e.keyCode == 13) {
+    clicked();
+  }
+}
+
+function getScore() {
+  return numOfR + "/" + qNo + "/" + (numOfQ + 1);
+}
+
+function setupData() {
+  for (var i = 0; i < mastData.length; i++) {
+    var idx = Math.floor(Math.random() * mastData[i].length)
+    imageList.push(mastData[i][idx]);
+    numOfQ = i;
+  }
+  qNo = 0;
+  var ans = document.getElementById("ansField");
+  ans.addEventListener("keypress", checkEnter);
+  imageList = shuffle(imageList);
+  document.getElementById("ansField").focus();
+}
+
+function selected(val) {
+  document.getElementById("selectorWid").disabled = "true";
+  var varData = document.createElement("script");
+  varData.src = val;
+  varData.id = "varDataWid";
+  document.body.appendChild(varData);
+  dataReady = true;
+  missedQuestion = [];
+}
+
+function initialize() {
+  dataReady = false;
+  var selector = document.getElementById("selectorWid");
+  for (var i = 0; i < selectableData.length; i++) {
+    var opt = document.createElement("option");
+    opt.setAttribute("value", selectableData[i][1]);
+    opt.innerHTML = selectableData[i][0];
+    selector.appendChild(opt);
+  }
+}
+
+
+// -->
+</script>
+
+
+</body>
+</html>
