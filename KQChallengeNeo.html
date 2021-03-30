@@ -5,15 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kuzushi-ji Quiz - Neo</title>
 <link rel="stylesheet" href="praise.css">
-<script src="praise.js"></script>
 
 <script type="text/javascript" src="NewMasterIdx.js"></script>
 
 
 </head>
 <body onLoad="initialize();" style="background-color: #F0F8FF">
-<div class="cherry-blossom-container">
-
 <select name="namae" id="selectorWid" onchange="selected(this.value);">
 <option disabled selected>テスト内容を選択</option>
 </select>
@@ -24,13 +21,12 @@
 <hr>
 <img id="preloadArea" src="" width="1px" height="1px"></img>
 <img id="imageArea" width="100" src=""></img>
-<div id="reviewArea"></div>
 
 <br/>
 <span style="font-size: 6px">データは『日本古典籍くずし字データセット』（国文研ほか所蔵／CODH加工） doi:10.20676/00000340 のものを使用しています。<br/>
 提供：<a href="http://codh.rois.ac.jp/">人文学オープンデータ共同利用センター</a></span>
 
-</div>
+<div id="reviewArea"></div>
 
 <script type="text/javascript">
 <!--
@@ -145,6 +141,8 @@ function clicked() {
         _keepingTidy();
       }
   } else if (currentMode == 3) {  // review
+    document.getElementById("preloadArea").remove();
+    document.getElementById("imageArea").remove();
     var reviewDiv = document.getElementById("reviewArea");
     while(missedQuestion.length > 0) {
         var idx = missedQuestion.shift() - 1;
@@ -154,8 +152,9 @@ function clicked() {
         var anImage = document.createElement("img");
         anImage.src = header + imagePath + suffix;
         reviewDiv.appendChild(anImage);
-//        reviewDiv.appendChild(document.createElement("br"));
+        reviewDiv.appendChild(document.createElement("br"));
     }
+    reviewDiv.appendChild(document.createTextNode("--end--"));
     currentMode = 4;
     button.value = "もう一度やる";
   } else if (currentMode == 4) {  // retry
