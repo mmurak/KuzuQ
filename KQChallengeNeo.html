@@ -152,6 +152,8 @@ function clicked() {
         var anImage = document.createElement("img");
         anImage.src = header + imagePath + suffix;
         reviewDiv.appendChild(anImage);
+        var title = imagePath.match(pattern)[1];
+        reviewDiv.appendChild(document.createTextNode(" （出典： " + title + "）"));
         reviewDiv.appendChild(document.createElement("br"));
     }
     reviewDiv.appendChild(document.createTextNode("--end--"));
