@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kuzushi-ji Data Browser - Neo</title>
+<link rel="stylesheet" href="praise.css">
+
+<script type="text/javascript" src="./NewMasterIdx.js"></script>
+
+
+</head>
+<body onLoad="initialize();" style="background-color: #F0F8FF">
+<select name="namae" id="selectorWid" onchange="selected(this.value);">
+<option disabled selected>表示内容を選択</option>
+</select>
+<br/>
+<span style="font-size: 6px">データは『日本古典籍くずし字データセット』（国文研ほか所蔵／CODH加工） doi:10.20676/00000340 のものを使用しています。<br/>
+提供：<a href="http://codh.rois.ac.jp/">人文学オープンデータ共同利用センター</a></span>
+
+<div id="viewArea"></div>
+
+<script type="text/javascript">
+<!--
+
+const header = "./imagePool/";
+const suffix = ".jpg";
+const pattern = /\/([^ (]+)/;
+
+function setupData() {
+  var iArea = document.getElementById("viewArea");
+  while(mastData.length > 0) {
+    var temp = mastData.shift();
+    iArea.appendChild(document.createTextNode(temp[0].charAt(0)+"："));
+    while(temp.length > 0) {
+      var uri = temp.shift();
+      var title = uri.match(pattern)[1];
+      var anImg = document.createElement("img");
+      anImg.src = header + uri + suffix;
+      var atag = document.createElement("a");
+      atag.href = "javascript:alert('" + title + "');";
+      atag.title = title;
+      atag.appendChild(anImg);
+      iArea.appendChild(atag);
+      iArea.appendChild(document.createTextNode(" "));
+    }
+    iArea.appendChild(document.createElement("br"));
+  }
+}
+
+function selected(val) {
+//  document.getElementById("selectorWid").disabled = "true";
+  var varData = document.createElement("script");
+  varData.src = val;
+  varData.id = "varDataWid";
+  document.body.appendChild(varData);
+  var vArea = document.getElementById("viewArea");
+  var fc = vArea.firstChild;
+  while (fc) {
+    vArea.removeChild(fc);
+    fc = vArea.firstChild;
+  }
+}
+
+function initialize() {
+  dataReady = false;
+  var selector = document.getElementById("selectorWid");
+  for (var i = 0; i < selectableData.length; i++) {
+    var opt = document.createElement("option");
+    opt.setAttribute("value", selectableData[i][1]);
+    opt.innerHTML = selectableData[i][0];
+    selector.appendChild(opt);
+  }
+}
+
+
+// -->
+</script>
+
+
+</body>
+</html>
