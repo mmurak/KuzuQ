@@ -10,7 +10,7 @@
 
 
 </head>
-<body onLoad="initialize();" style="background-color: #F0F8FF">
+<body onLoad="initialize();" id="bodyTop" style="background-color: #F0F8FF">
 <select name="namae" id="selectorWid" onchange="selected(this.value);">
 <option disabled selected>テスト内容を選択</option>
 </select>
@@ -120,12 +120,14 @@ function clicked() {
       numOfR += 1;
       descField.firstChild.nodeValue = answer + "で正解！（出典：" + title + "）" + getScore2();
     } else {
+      document.getElementById("bodyTop").style = "background-color: #F8F0FF";
       descField.firstChild.nodeValue = "残念！答えは" + answer + "です（出典：" + title + "）" + getScore2();
       missedQuestion.push(qNo);
     }
     currentMode = 2;
     button.value = "次へ";
   } else if (currentMode == 2) {  // next
+      document.getElementById("bodyTop").style = "background-color: #F0F8FF";
       if (numOfQ < qNo) {
           if (numOfR == (numOfQ + 1)) {
 //            petalStart();
