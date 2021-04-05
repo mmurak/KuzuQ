@@ -8,4 +8,8 @@ selectableData = [
   [ "小3漢字Part.2（50文字）", "./NewMaster003B.js" ],
   [ "小3漢字Part.3（50文字）", "./NewMaster003C.js" ],
   [ "小3漢字Part.4（48文字）", "./NewMaster003D.js" ],
+  [ "小4漢字Part.1（50文字）", "./NewMaster004A.js" ],
+  [ "小4漢字Part.2（50文字）", "./NewMaster004B.js" ],
+  [ "小4漢字Part.3（50文字）", "./NewMaster004C.js" ],
+  [ "小4漢字Part.4（50文字）", "./NewMaster004D.js" ],
 ];
