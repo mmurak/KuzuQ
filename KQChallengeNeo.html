@@ -127,7 +127,7 @@ function clicked() {
       descField.firstChild.nodeValue = "残念！答えは" + answer + "です（出典：" + title + "）" + getScore2();
       missedQuestion.push(qNo);
     }
-    loopIdxHolder = 0;
+    loopIdxHolder = -1;
     currentMode = 2;
     button.value = "次へ";
   } else if (currentMode == 2) {  // next
@@ -222,7 +222,7 @@ function initialize() {
 }
 
 
-var loopIdxHolder = 0;
+var loopIdxHolder = -1;
 function displayHint() {
   var answer = imageList[qNo - 1].charAt(0);
   var i =0;
@@ -232,10 +232,15 @@ function displayHint() {
   if (mastData[i].length == 1) {    // There is no other images, means 'no hint.'
     return;
   }
+  if (loopIdxHolder < 0) {  // first time
+    loopIdxHolder = 0;
+    while(mastData[i][loopIdxHolder] != imageList[qNo - 1]) {
+      loopIdxHolder += 1;
+    }
+  }
+  loopIdxHolder += 1;
   loopIdxHolder = loopIdxHolder % mastData[i].length;
   document.getElementById("imageArea").src = header + mastData[i][loopIdxHolder] + suffix;
-  loopIdxHolder += 1;     // prepare for next loop
-  loopIdxHolder = loopIdxHolder % mastData[i].length;
   document.getElementById("ansField").focus();
 }
 

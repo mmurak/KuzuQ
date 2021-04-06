@@ -16,4 +16,8 @@ selectableData = [
   [ "小5漢字Part.2（50文字）", "./NewMaster005B.js" ],
   [ "小5漢字Part.3（50文字）", "./NewMaster005C.js" ],
   [ "小5漢字Part.4（36文字）", "./NewMaster005D.js" ],
+  [ "小6漢字Part.1（50文字）", "./NewMaster006A.js" ],
+  [ "小6漢字Part.2（50文字）", "./NewMaster006B.js" ],
+  [ "小6漢字Part.3（50文字）", "./NewMaster006C.js" ],
+  [ "小6漢字Part.4（32文字）", "./NewMaster006D.js" ],
 ];
