@@ -15,7 +15,8 @@
 <option disabled selected>テスト内容を選択</option>
 </select>
 <br/>
-<input type="button" id="multiButton" value="スタート" onclick="clicked();">
+<input type="button" id="multiButton" value="スタート" disabled="true" onclick="clicked();">
+<input type="button" id="hintButton" value="ヒント" disabled="true" onclick="displayHint();">
 <input type="text" id="ansField" size="5" style="font-size: 26px;">
 <div id="expField">　</div>
 <hr>
@@ -32,6 +33,7 @@
 <!--
 // Global section
 const header = "./imagePool/";
+//const header = "./pythonOutput/";
 const suffix = ".jpg";
 const pattern = /\/([^ (]+)/;
 var currentMode = 0;    // 0=start, 1=check, 2=next, 3=review
@@ -107,6 +109,7 @@ function clicked() {
   var button = document.getElementById("multiButton");
   var inField = document.getElementById("ansField");
   var descField = document.getElementById("expField");
+  document.getElementById("hintButton").disabled = false;
   if (currentMode == 0) {   // start/next
     _keepingTidy();
   } else if (currentMode == 1) {  // check
@@ -124,11 +127,13 @@ function clicked() {
       descField.firstChild.nodeValue = "残念！答えは" + answer + "です（出典：" + title + "）" + getScore2();
       missedQuestion.push(qNo);
     }
+    loopIdxHolder = 0;
     currentMode = 2;
     button.value = "次へ";
   } else if (currentMode == 2) {  // next
       document.getElementById("bodyTop").style = "background-color: #F0F8FF";
       if (numOfQ < qNo) {
+          document.getElementById("hintButton").disabled = true;
           if (numOfR == (numOfQ + 1)) {
 //            petalStart();
             descField.firstChild.nodeValue = getScore() + " 全問正解！！！　お疲れさまでした！";
@@ -195,7 +200,8 @@ function setupData() {
 }
 
 function selected(val) {
-  document.getElementById("selectorWid").disabled = "true";
+  document.getElementById("selectorWid").disabled = true;
+  document.getElementById("multiButton").disabled = false;
   var varData = document.createElement("script");
   varData.src = val;
   varData.id = "varDataWid";
@@ -215,6 +221,23 @@ function initialize() {
   }
 }
 
+
+var loopIdxHolder = 0;
+function displayHint() {
+  var answer = imageList[qNo - 1].charAt(0);
+  var i =0;
+  while((i < mastData.length) && (mastData[i][0].charAt(0) != answer)) {
+    i += 1;
+  }
+  if (mastData[i].length == 1) {    // There is no other images, means 'no hint.'
+    return;
+  }
+  loopIdxHolder = loopIdxHolder % mastData[i].length;
+  document.getElementById("imageArea").src = header + mastData[i][loopIdxHolder] + suffix;
+  loopIdxHolder += 1;     // prepare for next loop
+  loopIdxHolder = loopIdxHolder % mastData[i].length;
+  document.getElementById("ansField").focus();
+}
 
 // -->
 </script>
