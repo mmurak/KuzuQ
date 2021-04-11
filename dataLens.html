@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kuzushi-ji Data Comparator</title>
+<link rel="stylesheet" href="praise.css">
+<script type="text/javascript" src="./dataLensMaster.js"></script>
+
+</head>
+<body onLoad="initialize();" style="background-color: #FFF8F0">
+<input type="text" id="input01" size="3" maxlength="1" onchange="entered01();">
+<input type="text" id="input02" size="3" maxlength="1" onchange="entered02();">
+<input type="button" id="pushButton" value="Extract" onclick="process();">
+<hr/>
+<div id="output01"></div>
+<hr/>
+<div id="output02"></div>
+<hr/>
+<span style="font-size: 6px">データは『日本古典籍くずし字データセット』（国文研ほか所蔵／CODH加工） doi:10.20676/00000340 のものを使用しています。<br/>
+提供：<a href="http://codh.rois.ac.jp/">人文学オープンデータ共同利用センター</a></span>
+
+<script type="text/javascript">
+<!--
+const master = "dataLensMaster.js";
+const header = "./imagePool/";
+//const header = "./pythonOutput/";
+const suffix = ".jpg";
+const pattern = /\/([^ (]+)/;
+
+function initialize() {
+  document.getElementById("input01").focus();
+}
+function entered01() {
+  document.getElementById("input02").focus();
+}
+function entered02() {
+  document.getElementById("pushButton").focus();
+}
+function process() {
+  var char01 = document.getElementById("input01").value;
+  var char02 = document.getElementById("input02").value;
+
+  var field01= document.getElementById("output01");
+  removeAllChildrenNodes(field01);
+  field01.appendChild(document.createTextNode(char01 + ":"));
+  for(i = 0; i < dataLensMaster.length; i++) {
+    if (char01 == dataLensMaster[i].charAt(0)) {
+      var image = document.createElement("img");
+      image.src = header + dataLensMaster[i];
+      field01.appendChild(image);
+    }
+  }
+
+  var field02= document.getElementById("output02");
+  removeAllChildrenNodes(field02);
+  field02.appendChild(document.createTextNode(char02 + ":"));
+  for(i = 0; i < dataLensMaster.length; i++) {
+    if (char02 == dataLensMaster[i].charAt(0)) {
+      var image = document.createElement("img");
+      image.src = header + dataLensMaster[i];
+      field02.appendChild(image);
+    }
+  }
+  document.getElementById("input01").focus();
+}
+
+function removeAllChildrenNodes(parent) {
+  while (parent.firstChild) {
+    parent.removeChild(parent.firstChild);
+  }
+}
+
+
+// -->
+</script>
+
+
+</body>
+</html>
